@@ -1,6 +1,7 @@
 package com.example.parstagram;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
             goMainActivity();
         }
         binding.btnLogin.setBackgroundColor(getResources().getColor(R.color.blue));
-
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +37,13 @@ public class LoginActivity extends AppCompatActivity {
                 String username = binding.etUsername.getText().toString();
                 String password = binding.etPassword.getText().toString();
                 loginUser(username, password);
+            }
+        });
+
+        binding.tvSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goSignupActivity();
             }
         });
     }
@@ -63,5 +70,11 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private void goSignupActivity() {
+        FragmentManager fm = getSupportFragmentManager();
+        SignupFragment signupFragment = SignupFragment.newInstance("Sign Up");
+        signupFragment.show(fm, "fragment_signup");
     }
 }
