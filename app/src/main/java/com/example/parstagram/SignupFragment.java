@@ -85,7 +85,7 @@ public class SignupFragment extends DialogFragment {
                 user.setPassword(binding.etPassword.getText().toString());
                 // Invoke sign up in background
                 user.signUpInBackground(e -> {
-                    if (e != null) {
+                    if (e == null) {
                         Log.i(TAG, "User successfully signed up");
                         Toast.makeText(view.getContext(), "You made a new account", Toast.LENGTH_SHORT).show();
                     } else {
