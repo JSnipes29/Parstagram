@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.parstagram.MainActivity;
+import com.example.parstagram.OnBackPressed;
 import com.example.parstagram.Post;
 import com.example.parstagram.R;
 import com.example.parstagram.databinding.FragmentComposeBinding;
@@ -32,7 +33,7 @@ import java.io.File;
 import static android.app.Activity.RESULT_OK;
 
 
-public class ComposeFragment extends Fragment {
+public class ComposeFragment extends BaseFragment {
 
     public static final String TAG = "ComposeFragment";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -116,13 +117,11 @@ public class ComposeFragment extends Fragment {
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getContext().getPackageManager()) != null || true) {
-            // Start the image capture intent to take photo
-            Log.i(TAG, "Launching camera intent");
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
+
+
+        // Start the image capture intent to take photo
+        Log.i(TAG, "Launching camera intent");
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
@@ -156,4 +155,6 @@ public class ComposeFragment extends Fragment {
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
+
+
 }

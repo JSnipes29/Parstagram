@@ -21,7 +21,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.parstagram.databinding.ActivityMainBinding;
+import com.example.parstagram.fragments.BaseFragment;
 import com.example.parstagram.fragments.ComposeFragment;
+import com.example.parstagram.fragments.DetailsPostFragment;
 import com.example.parstagram.fragments.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
@@ -90,5 +92,25 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        String f = tellFragments();
+        if (f.equals(DetailsPostFragment.class.getSimpleName())) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    public String tellFragments() {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for(Fragment f : fragments){
+            if(f != null && f instanceof BaseFragment) {
+                Log.i(TAG, f.getClass().getSimpleName());
+                ((BaseFragment) f).onBackPressed();
+                return f.getClass().getSimpleName();
+            }
+        }
+        return "";
+    }
 
 }

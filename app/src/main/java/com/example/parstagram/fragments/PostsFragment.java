@@ -6,12 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.parstagram.OnBackPressed;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.R;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PostsFragment extends Fragment {
+public class PostsFragment extends BaseFragment {
 
     FragmentPostsBinding binding;
     public static final String TAG = "PostsFragment";
@@ -58,8 +60,21 @@ public class PostsFragment extends Fragment {
 
         binding.rvPosts.setAdapter(adapter);
         binding.rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchPostsAsync(0);
+            }
+        });
+        // Configure the refreshing colors
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         queryPosts();
-
 
     }
 
@@ -80,4 +95,25 @@ public class PostsFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
     }
+
+    public void fetchPostsAsync(int page) {
+        // Send the network request to fetch the updated data
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.setLimit(LIMIT);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+        query.findInBackground((posts, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Couldn't get post", e);
+                return;
+            }
+            for (Post post: posts) {
+                Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
+            }
+            adapter.clear();
+            adapter.addAll(posts);
+            binding.swipeContainer.setRefreshing(false);
+        });
+    }
+
 }
