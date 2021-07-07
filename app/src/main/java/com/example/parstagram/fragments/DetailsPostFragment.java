@@ -100,7 +100,6 @@ public class DetailsPostFragment extends BaseFragment implements OnBackPressed {
     public void onBackPressed() {
         Fragment fragment = new PostsFragment();
         Bundle bundle = new Bundle();
-        //bundle.putString("postId", post.getObjectId());
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
