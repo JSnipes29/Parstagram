@@ -128,6 +128,51 @@ public class DetailsPostFragment extends BaseFragment implements OnBackPressed {
             CommentAdapter adapter = new CommentAdapter(getContext(), comments);
             binding.rvComments.setAdapter(adapter);
             binding.rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
+            if (post.liked()) {
+                binding.ivLike.setImageResource(R.drawable.ufi_heart_active);
+            } else {
+                binding.ivLike.setImageResource(R.drawable.ufi_heart);
+            }
+
+            binding.ivLike.setOnClickListener(v -> {
+                Log.i("PostAdapter","Clicked like");
+                if (post.liked()) {
+                    binding.ivLike.setImageResource(R.drawable.ufi_heart);
+                    post.setLikes(post.getLikes() - 1);
+                    binding.tvLikeCount.setText(String.valueOf(post.getLikes()));
+                    JSONArray likesArray = post.getLikesArray();
+                    int index = -1;
+                    for (int j = 0; j < likesArray.length(); j++) {
+                        try {
+                            if (likesArray.getJSONObject(j).getString("username").equals(ParseUser.getCurrentUser().getUsername())) {
+                                index = j;
+                                break;
+                            }
+                        } catch (JSONException error) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (index != -1) {
+                        likesArray.remove(index);
+                    }
+                    post.setLikesArray(likesArray);
+                    post.saveInBackground();
+                } else {
+                    binding.ivLike.setImageResource(R.drawable.ufi_heart_active);
+                    post.setLikes(post.getLikes() + 1);
+                    binding.tvLikeCount.setText(String.valueOf(post.getLikes()));
+                    JSONArray likesArray = post.getLikesArray();
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("username", ParseUser.getCurrentUser().getUsername());
+                        likesArray.put(obj);
+                        post.setLikesArray(likesArray);
+                    } catch (JSONException error) {
+                        e.printStackTrace();
+                    }
+                    post.saveInBackground();
+                }
+            });
         });
     }
 

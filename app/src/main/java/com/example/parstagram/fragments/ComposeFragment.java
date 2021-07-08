@@ -28,6 +28,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+
 import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
@@ -96,6 +98,7 @@ public class ComposeFragment extends BaseFragment {
         post.setImage(new ParseFile(photoFile));
         post.setUser(user);
         post.setLikes(0);
+        post.setComments(new JSONArray());
         post.saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Error while saving", e);
