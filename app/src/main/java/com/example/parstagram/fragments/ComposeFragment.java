@@ -90,10 +90,12 @@ public class ComposeFragment extends BaseFragment {
     }
 
     private void savePost(String description, ParseUser user, File photoFile) {
+        ((MainActivity)getActivity()).showProgressBar();
         Post post = new Post();
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
         post.setUser(user);
+        post.setLikes(0);
         post.saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Error while saving", e);
@@ -102,6 +104,7 @@ public class ComposeFragment extends BaseFragment {
             Log.i(TAG, "Post save was successful");
             binding.etDescription.setText("");
             binding.ivPostImage.setImageResource(0);
+            ((MainActivity)getActivity()).hideProgressBar();
         });
     }
 

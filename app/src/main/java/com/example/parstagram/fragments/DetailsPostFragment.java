@@ -5,13 +5,16 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram.CommentAdapter;
 import com.example.parstagram.OnBackPressed;
 import com.example.parstagram.Post;
 import com.example.parstagram.R;
@@ -19,7 +22,11 @@ import com.example.parstagram.databinding.FragmentDetailsPostBinding;
 import com.example.parstagram.databinding.FragmentPostsBinding;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 /**
@@ -61,6 +68,29 @@ public class DetailsPostFragment extends BaseFragment implements OnBackPressed {
         binding = FragmentDetailsPostBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
 
+        binding.btnSend.setOnClickListener(v -> {
+            if (binding.etComment.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Can't have empty comment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            JSONObject comment = new JSONObject();
+            try {
+                comment.put("username", ParseUser.getCurrentUser().getUsername());
+                comment.put("comment", binding.etComment.getText().toString());
+                JSONArray comments = post.getComments();
+                comments.put(comment);
+                post.setComments(comments);
+                post.saveInBackground();
+                binding.etComment.setText("");
+                Fragment fragment = new PostsFragment();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }
@@ -89,10 +119,15 @@ public class DetailsPostFragment extends BaseFragment implements OnBackPressed {
             binding.tvName.setText(post.getUser().getUsername());
             binding.tvDescription.setText(post.getDescription());
             binding.tvTimestamp.setText(post.getCreatedAt().toString());
+            binding.tvLikeCount.setText("" + post.getLikes());
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(getContext()).load(image.getUrl()).into(binding.ivImage);
             }
+            JSONArray comments = post.getComments();
+            CommentAdapter adapter = new CommentAdapter(getContext(), comments);
+            binding.rvComments.setAdapter(adapter);
+            binding.rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
         });
     }
 

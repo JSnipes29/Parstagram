@@ -22,7 +22,11 @@ import com.example.parstagram.fragments.DetailsPostFragment;
 import com.parse.ParseFile;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -68,21 +72,32 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvDescription;
         private ImageView ivImage;
         private RelativeLayout rlPost;
+        private TextView tvTimestamp;
+        private ImageView ivLike;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ivImage = itemView.findViewById(R.id.ivImage);
             rlPost = itemView.findViewById(R.id.rlPost);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivLike = itemView.findViewById(R.id.ivLike);
         }
 
-        public void bind(Post post) {
+        public void bind(final Post post) {
             tvDescription.setText(post.getDescription());
             tvName.setText(post.getUser().getUsername());
+            tvTimestamp.setText(post.getCreatedAt().toString());
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+            ivLike.setOnClickListener(v -> {
+                Log.i("Adapter", "Clicked");
+                post.setLikes(post.getLikes() + 1);
+                post.saveInBackground();
+                Log.i("Adapter", String.valueOf(post.getLikes()));
+            });
             rlPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

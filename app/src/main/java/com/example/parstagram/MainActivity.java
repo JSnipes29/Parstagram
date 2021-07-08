@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     public static final String TAG = "MainActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
+    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     public void logout(MenuItem mi) {
         ParseUser.logOut();
         Intent i = new Intent(MainActivity.this, LoginActivity.class);
@@ -112,5 +119,16 @@ public class MainActivity extends AppCompatActivity {
         }
         return "";
     }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
+    }
+
 
 }

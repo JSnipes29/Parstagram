@@ -11,10 +11,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
+import com.example.parstagram.MainActivity;
 import com.example.parstagram.OnBackPressed;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
@@ -22,8 +25,14 @@ import com.example.parstagram.R;
 import com.example.parstagram.databinding.FragmentComposeBinding;
 import com.example.parstagram.databinding.FragmentPostsBinding;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,7 +41,7 @@ public class PostsFragment extends BaseFragment {
     FragmentPostsBinding binding;
     private EndlessRecyclerViewScrollListener scrollListener;
     public static final String TAG = "PostsFragment";
-    private static final int LIMIT = 20;
+    private static final int LIMIT = 1;
     private PostsAdapter adapter;
     private List<Post> posts;
 
@@ -131,7 +140,7 @@ public class PostsFragment extends BaseFragment {
         // Send the network request to fetch the updated data
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.setLimit(LIMIT);
+        query.setLimit(3);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground((posts, e) -> {
             if (e != null) {

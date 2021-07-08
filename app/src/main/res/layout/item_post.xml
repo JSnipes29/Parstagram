@@ -25,6 +25,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="34dp"
         android:layout_toEndOf="@+id/ivProfileImage"
+        android:textStyle="bold"
         tools:text="username001" />
 
     <ImageView
@@ -34,7 +35,7 @@
         android:layout_below="@+id/ivProfileImage"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -97,4 +98,15 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="4dp"
         android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        tools:text="December 29 2001" />
+
 </RelativeLayout>
