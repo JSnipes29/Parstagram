@@ -55,6 +55,14 @@ public class ProfileFragment extends BaseFragment {
         View view = binding.getRoot();
         binding.tvName.setText(user.getUsername());
 
+        ParseFile profileImage = user.getParseFile("profileImage");
+        Log.i(TAG, profileImage.getUrl());
+        if (profileImage != null) {
+            Log.i(TAG, "Loading image");
+            Glide.with(getContext()).load(profileImage.getUrl()).circleCrop().into(binding.ivProfileImage);
+        } else {
+            Log.i(TAG, "image is null");
+        }
         // Inflate the layout for this fragment
         return view;
     }
@@ -82,14 +90,7 @@ public class ProfileFragment extends BaseFragment {
             binding.rvPosts.setAdapter(adapter);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
             binding.rvPosts.setLayoutManager(gridLayoutManager);
-            ParseFile profileImage = user.getParseFile("profileImage");
-            Log.i(TAG, profileImage.getUrl());
-            if (profileImage != null) {
-                Log.i(TAG, "Loading image");
-                Glide.with(getContext()).load(profileImage.getUrl()).circleCrop().into(binding.ivProfileImage);
-            } else {
-                Log.i(TAG, "image is null");
-            }
+
         });
     }
 }
