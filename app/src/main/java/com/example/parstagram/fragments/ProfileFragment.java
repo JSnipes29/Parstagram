@@ -45,6 +45,7 @@ public class ProfileFragment extends BaseFragment {
         user = (ParseUser) Parcels.unwrap(getArguments().getParcelable("user"));
         Log.i(TAG, user.getUsername());
         queryPosts(user);
+
     }
 
     @Override
@@ -82,6 +83,7 @@ public class ProfileFragment extends BaseFragment {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
             binding.rvPosts.setLayoutManager(gridLayoutManager);
             ParseFile profileImage = user.getParseFile("profileImage");
+            Log.i(TAG, profileImage.getUrl());
             if (profileImage != null) {
                 Log.i(TAG, "Loading image");
                 Glide.with(getContext()).load(profileImage.getUrl()).circleCrop().into(binding.ivProfileImage);
