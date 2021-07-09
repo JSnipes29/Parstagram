@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.fragments.DetailsPostFragment;
+import com.example.parstagram.fragments.ProfileFragment;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
@@ -75,6 +76,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private RelativeLayout rlPost;
         private TextView tvTimestamp;
         private ImageView ivLike;
+        private ImageView ivProfileImage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
@@ -83,6 +85,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             rlPost = itemView.findViewById(R.id.rlPost);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivLike = itemView.findViewById(R.id.ivLike);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
         }
 
         public void bind(final Post post) {
@@ -93,12 +96,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+            ParseFile profileImage = post.getUser().getParseFile("profileImage");
+            if (profileImage != null) {
+                Glide.with(context).load(profileImage.getUrl()).circleCrop().into(ivProfileImage);
+            }
             rlPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     detailPost(post);
                 }
             });
+            ivProfileImage.setOnClickListener(v -> {detailProfile(post);});
+            tvName.setOnClickListener(v -> {detailProfile(post);});
             if (post.liked()) {
                 ivLike.setImageResource(R.drawable.ufi_heart_active);
             } else {
@@ -148,6 +157,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             Fragment fragment = new DetailsPostFragment();
             Bundle bundle = new Bundle();
             bundle.putString("postId", post.getObjectId());
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+        }
+
+        public void detailProfile(Post post) {
+            Log.i("PostsAdapter", "Clicked profile image or name");
+            Fragment fragment = new ProfileFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("user", Parcels.wrap(post.getUser()));
             fragment.setArguments(bundle);
             FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

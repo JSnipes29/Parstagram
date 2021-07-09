@@ -124,6 +124,10 @@ public class DetailsPostFragment extends BaseFragment implements OnBackPressed {
             if (image != null) {
                 Glide.with(getContext()).load(image.getUrl()).into(binding.ivImage);
             }
+            ParseFile profileImage = post.getUser().getParseFile("profileImage");
+            if (profileImage != null) {
+                Glide.with(getContext()).load(profileImage.getUrl()).circleCrop().into(binding.ivProfileImage);
+            }
             JSONArray comments = post.getComments();
             CommentAdapter adapter = new CommentAdapter(getContext(), comments);
             binding.rvComments.setAdapter(adapter);

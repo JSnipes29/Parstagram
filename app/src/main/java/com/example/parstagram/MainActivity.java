@@ -25,6 +25,7 @@ import com.example.parstagram.fragments.BaseFragment;
 import com.example.parstagram.fragments.ComposeFragment;
 import com.example.parstagram.fragments.DetailsPostFragment;
 import com.example.parstagram.fragments.PostsFragment;
+import com.example.parstagram.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -32,6 +33,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.util.List;
@@ -66,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new ComposeFragment();
                         break;
                     case R.id.action_profile:
-                        fragment = new ComposeFragment();
+                        fragment = new ProfileFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("user", Parcels.wrap(ParseUser.getCurrentUser()));
+                        fragment.setArguments(bundle);
                         break;
                     default:
                         fragment = new PostsFragment();
