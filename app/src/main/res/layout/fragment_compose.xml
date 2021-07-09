@@ -34,7 +34,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:ems="10"
-        android:hint="@string/description" />
+        android:hint="@string/description"
+        android:inputType="text"
+        android:imeOptions="actionNext"/>
 
     <ImageView
         android:id="@+id/ivPostImage"

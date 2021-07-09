@@ -17,7 +17,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:ems="10"
-        android:hint="@string/new_username" />
+        android:hint="@string/new_username"
+        android:inputType="text"
+        android:imeOptions="actionNext"/>
 
     <EditText
         android:id="@+id/etPassword"
